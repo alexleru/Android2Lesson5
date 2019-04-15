@@ -1,6 +1,7 @@
 package ru.alexey.weather;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -16,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import ru.alexey.weather.CustomView.CustomView;
@@ -30,14 +32,27 @@ public class MainActivity extends AppCompatActivity
     TextView textViewTemp;
     TextView textViewHum;
     Intent intentToService;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initViews();
         initSensor();
+        initSharedPreferences();
     }
 
+    private void initSharedPreferences() {
+        sharedPreferences = getPreferences(MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+        singleton.setAddData(0, sharedPreferences.
+                getBoolean("show_wind_menu", false));
+        singleton.setAddData(1, sharedPreferences.
+                getBoolean("show_humidity_menu", false));
+        singleton.setAddData(2, sharedPreferences.
+                getBoolean("show_pressure_menu", false));
+    }
     private void initViews() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -112,25 +127,47 @@ public class MainActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
+
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.show_wind_menu).setChecked(sharedPreferences.
+                getBoolean("show_wind_menu", false));
+        menu.findItem(R.id.show_humidity_menu).setChecked(sharedPreferences.
+                getBoolean("show_humidity_menu", false));
+        menu.findItem(R.id.show_pressure_menu).setChecked(sharedPreferences.
+                getBoolean("show_pressure_menu", false));
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
             case R.id.show_wind_menu:
                 singleton.setAddData(0, !item.isChecked());
+                editorCommitSharedPreferences(item, "show_wind_menu");
                 item.setChecked(!item.isChecked());
                 return true;
             case R.id.show_humidity_menu:
                 singleton.setAddData(1, !item.isChecked());
+                editorCommitSharedPreferences(item, "show_humidity_menu");
                 item.setChecked(!item.isChecked());
                 return true;
             case R.id.show_pressure_menu:
                 singleton.setAddData(2, !item.isChecked());
+                editorCommitSharedPreferences(item, "show_pressure_menu");
                 item.setChecked(!item.isChecked());
                 return true;
             default:
                 return false;
         }
+    }
+
+    private void editorCommitSharedPreferences(MenuItem item, String show_wind_menu) {
+        editor.putBoolean(show_wind_menu, !item.isChecked());
+        editor.commit();
     }
 
     @Override
