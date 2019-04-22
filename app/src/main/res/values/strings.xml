@@ -13,10 +13,21 @@
     <string name="author">Author: Alexey</string>
     <string name="attention_city_name">Enter the name of the city</string>
     <string name="moscow">Moscow</string>
-    <string name="saint_petersburg">Saint-Petersburg</string>
+    <string name="saint_petersburg">Saint Petersburg</string>
     <string name="nav_header_subtitle">Menu</string>
     <string name="feedback">Feedback</string>
     <string name="leave_your_feedback_here">Leave your feedback here!</string>
     <string name="send_feedback">send feedback</string>
     <string name="touch_the_picture_below">Touch the picture below</string>
+    <string name="north">North</string>
+    <string name="northeast">NorthEast</string>
+    <string name="east">East</string>
+    <string name="southeast">SouthEast</string>
+    <string name="south">South</string>
+    <string name="southwest">Southwest</string>
+    <string name="west">West</string>
+    <string name="northwest">NorthWest</string>
+    <string name="none_data">none data</string>
+    <string name="metr_per_sec">m/s</string>
+    <string name="mmhg">mmHg</string>
 </resources>

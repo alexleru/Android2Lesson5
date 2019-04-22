@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import ru.alexey.weather.R;
 import ru.alexey.weather.SingletonForPreferences;
 
@@ -17,11 +18,15 @@ public class FragmentAboutWeather extends Fragment {
     private RecyclerView recyclerView;
     private WeatherAdapter weatherAdapter;
     SingletonForPreferences singleton = SingletonForPreferences.getInstance();
-
     public static FragmentAboutWeather create(Bundle bundle){
         FragmentAboutWeather fragmentAboutWeather = new FragmentAboutWeather();
         fragmentAboutWeather.setArguments(bundle);
         return fragmentAboutWeather;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -36,7 +41,8 @@ public class FragmentAboutWeather extends Fragment {
         recyclerView = view.findViewById(R.id.recycle_fragment_item);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
-        weatherAdapter = new WeatherAdapter(getCityName(), getAddData());
+        weatherAdapter = new WeatherAdapter(getCityName(),
+                getAddData(), getResources());
         recyclerView.setAdapter(weatherAdapter);
     }
 

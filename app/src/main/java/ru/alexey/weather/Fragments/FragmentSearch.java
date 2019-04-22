@@ -2,6 +2,7 @@ package ru.alexey.weather.Fragments;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,8 +12,10 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import java.util.Objects;
 import ru.alexey.weather.ActivityAboutWeather;
+import ru.alexey.weather.Data.WeatherDataParsingSingleton;
 import ru.alexey.weather.R;
 
 public class FragmentSearch extends Fragment{
@@ -70,25 +73,40 @@ public class FragmentSearch extends Fragment{
         cardViewMoscow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onClickCellSearch(Objects.requireNonNull(getActivity()).getResources().getString(R.string.moscow));
+                onClickCellSearch(Objects.requireNonNull(getResources().getString(R.string.moscow)));
             }
         });
         CardView cardViewPeterburg = view.findViewById(R.id.cardViewSaintPeterburg);
         cardViewPeterburg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onClickCellSearch(Objects.requireNonNull(getActivity()).getResources().getString(R.string.saint_petersburg));
+                onClickCellSearch(Objects.requireNonNull(getResources().getString(R.string.saint_petersburg)));
             }
         });
     }
 
     private void onClickCellSearch(String cityNameOfCard) {
         cityName = cityNameOfCard;
-        if(isExitFragmentAboutWeather){
-            showFragmentAboutWeather();
+        AsyncGetData asyncGetData = new AsyncGetData();
+        asyncGetData.execute(cityName);
+    }
+
+    class AsyncGetData extends AsyncTask<String, String, String> {
+        @Override
+        protected String doInBackground(String... strings) {
+            WeatherDataParsingSingleton.getInstance().startConnection(strings[0], getResources());
+            return null;
         }
-        else {
-            startActivity(getIntentAboutWeather());
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if(isExitFragmentAboutWeather){
+                showFragmentAboutWeather();
+            }
+            else {
+                startActivity(getIntentAboutWeather());
+            }
         }
     }
 
